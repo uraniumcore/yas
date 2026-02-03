@@ -389,13 +389,42 @@
         footer {
             background: var(--brown-dark);
             color: var(--beige-light);
-            padding: 3rem;
+            padding: 4rem 3rem;
             text-align: center;
         }
 
-        footer p {
+        .footer-content {
+            max-width: 900px;
+            margin: 0 auto;
+        }
+
+        .footer-title {
+            font-family: 'Cormorant Garamond', serif;
+            font-size: 1.8rem;
+            font-weight: 700;
+            margin-bottom: 1.5rem;
+            color: var(--accent-gold);
+            letter-spacing: 0.5px;
+        }
+
+        .footer-text {
             font-size: 0.95rem;
-            opacity: 0.8;
+            line-height: 1.8;
+            opacity: 0.9;
+            margin-bottom: 1.2rem;
+            text-align: justify;
+        }
+
+        .footer-text:last-of-type {
+            margin-bottom: 2rem;
+        }
+
+        .footer-copyright {
+            font-size: 0.85rem;
+            opacity: 0.7;
+            padding-top: 2rem;
+            border-top: 1px solid rgba(255, 249, 240, 0.2);
+            margin-top: 2rem;
         }
 
         /* Responsive */
@@ -832,7 +861,21 @@
 
     <!-- Footer -->
     <footer>
-        <p>&copy; 2026 Yasmin Aipanova. Барлық құқықтар қорғалған.</p>
+        <div class="footer-content">
+            <h3 class="footer-title">Жоба туралы</h3>
+            <p class="footer-text">
+                Бұл сайт «Білім беру саласындағы жасанды интеллект: мүмкіндіктер мен қауіптер» тақырыбындағы ғылыми зерттеу жұмысының нәтижесі ретінде жасалды.
+            </p>
+            <p class="footer-text">
+                Жоба аясында жасанды интеллекттің оқу процесіндегі рөлі, оның артықшылықтары мен тәуекелдері, сондай-ақ оны қолданудағы этикалық және қауіпсіздік мәселелері талданады.
+            </p>
+            <p class="footer-text">
+                Сайттың негізгі мақсаты – оқушылар мен студенттерге жасанды интеллектті саналы және жауапты түрде қолдану жөнінде түсінік беру.
+            </p>
+            <div class="footer-copyright">
+                <p>&copy; 2026 Yasmin Aipanova. Барлық құқықтар қорғалған.</p>
+            </div>
+        </div>
     </footer>
 
     <script>
