@@ -1,0 +1,570 @@
+<!DOCTYPE html>
+<html lang="kk">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Quiz</title>
+    <style>
+        * {
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: system-ui, sans-serif;
+            background: #f7f4ef;
+            margin: 0;
+            padding: 1rem;
+            color: #3b2f2f;
+            -webkit-font-smoothing: antialiased;
+        }
+
+        .quiz-container {
+            max-width: 800px;
+            margin: auto;
+            background: #fff;
+            padding: 1.5rem;
+            border-radius: 16px;
+            box-shadow: 0 10px 30px rgba(0,0,0,.08);
+        }
+
+        .quiz-tabs {
+            display: flex;
+            gap: 0.5rem;
+            margin-bottom: 2rem;
+            flex-wrap: wrap;
+        }
+
+        .quiz-tabs button {
+            flex: 1;
+            min-width: 100px;
+            padding: 0.8rem 0.5rem;
+            border: none;
+            border-radius: 12px;
+            background: #e8e1d9;
+            cursor: pointer;
+            font-weight: 600;
+            font-size: 0.9rem;
+            transition: all 0.3s ease;
+        }
+
+        .quiz-tabs button.active {
+            background: #b77a4a;
+            color: #fff;
+        }
+
+        .quiz-section {
+            display: none;
+        }
+
+        .quiz-section.active {
+            display: block;
+        }
+
+        .quiz-section h2 {
+            margin-top: 0;
+            font-size: 1.5rem;
+        }
+
+        .question {
+            margin-bottom: 1.5rem;
+        }
+
+        .question p {
+            font-weight: 600;
+            margin: 0.5rem 0;
+            font-size: 0.95rem;
+        }
+
+        textarea {
+            width: 100%;
+            min-height: 120px;
+            padding: 1rem;
+            border-radius: 12px;
+            border: 1px solid #ccc;
+            resize: vertical;
+            font-family: system-ui, sans-serif;
+            font-size: 1rem;
+        }
+
+        select {
+            width: 100%;
+            padding: 0.6rem;
+            border-radius: 10px;
+            font-size: 1rem;
+        }
+
+        .submit-btn {
+            margin-top: 1.5rem;
+            padding: 0.8rem 1.5rem;
+            border: none;
+            border-radius: 12px;
+            background: #b77a4a;
+            color: #fff;
+            font-size: 1rem;
+            cursor: pointer;
+            width: 100%;
+            transition: all 0.3s ease;
+        }
+
+        .submit-btn:hover:not(:disabled) {
+            background: #a0643f;
+        }
+
+        .submit-btn:active:not(:disabled) {
+            transform: scale(0.98);
+        }
+
+        .result {
+            margin-top: 1rem;
+            font-weight: 700;
+            padding: 1rem;
+            border-radius: 12px;
+            background: #f0f0f0;
+            text-align: center;
+            font-size: 1.1rem;
+        }
+
+        .result.completed {
+            background: #e8f5e9;
+            border: 2px solid #4caf50;
+        }
+
+        .answer-option {
+            padding: 0.8rem;
+            margin: 0.5rem 0;
+            border-radius: 8px;
+            border: 1px solid #ddd;
+            display: flex;
+            align-items: center;
+            cursor: pointer;
+            transition: all 0.2s ease;
+        }
+
+        .answer-option:active {
+            transform: scale(0.98);
+        }
+
+        .answer-option.correct {
+            background: #c8e6c9;
+            border: 2px solid #4caf50;
+            color: #2e7d32;
+        }
+
+        .answer-option.incorrect {
+            background: #ffcdd2;
+            border: 2px solid #f44336;
+            color: #c62828;
+        }
+
+        .answer-option input[type="radio"] {
+            margin-right: 0.5rem;
+            cursor: pointer;
+            width: 18px;
+            height: 18px;
+        }
+
+        .question-feedback {
+            font-size: 0.9rem;
+            margin-top: 0.5rem;
+            font-weight: 600;
+        }
+
+        .correct-label {
+            color: #2e7d32;
+        }
+
+        .incorrect-label {
+            color: #c62828;
+        }
+
+        .submit-btn:disabled {
+            opacity: 0.6;
+            cursor: not-allowed;
+        }
+
+        input[type="file"] {
+            padding: 0.5rem;
+            width: 100%;
+        }
+
+        /* Mobile optimizations */
+        @media (max-width: 768px) {
+            body {
+                padding: 0.5rem;
+            }
+
+            .quiz-container {
+                padding: 1rem;
+                border-radius: 12px;
+            }
+
+            .quiz-tabs {
+                gap: 0.25rem;
+                margin-bottom: 1.5rem;
+            }
+
+            .quiz-tabs button {
+                min-width: 80px;
+                padding: 0.7rem 0.3rem;
+                font-size: 0.8rem;
+            }
+
+            .quiz-section h2 {
+                font-size: 1.25rem;
+            }
+
+            .question p {
+                font-size: 0.9rem;
+            }
+
+            .submit-btn {
+                padding: 0.7rem 1rem;
+                font-size: 0.95rem;
+            }
+
+            .result {
+                font-size: 1rem;
+                padding: 0.8rem;
+            }
+
+            .answer-option {
+                padding: 0.6rem;
+                margin: 0.4rem 0;
+            }
+
+            textarea {
+                min-height: 100px;
+                padding: 0.8rem;
+                font-size: 16px;
+            }
+        }
+
+        @media (max-width: 480px) {
+            body {
+                padding: 0.25rem;
+            }
+
+            .quiz-container {
+                padding: 0.75rem;
+                border-radius: 8px;
+                box-shadow: 0 5px 15px rgba(0,0,0,.05);
+            }
+
+            .quiz-tabs {
+                gap: 0.2rem;
+                margin-bottom: 1rem;
+                flex-direction: column;
+            }
+
+            .quiz-tabs button {
+                min-width: auto;
+                padding: 0.65rem;
+                font-size: 0.75rem;
+            }
+
+            .quiz-section h2 {
+                font-size: 1.1rem;
+                margin-bottom: 1rem;
+            }
+
+            .question {
+                margin-bottom: 1rem;
+            }
+
+            .question p {
+                font-size: 0.85rem;
+                margin: 0.3rem 0;
+            }
+
+            .submit-btn {
+                margin-top: 1rem;
+                padding: 0.65rem;
+                font-size: 0.9rem;
+            }
+
+            .result {
+                font-size: 0.9rem;
+                padding: 0.6rem;
+            }
+
+            .result div:first-child {
+                font-size: 1.5rem !important;
+            }
+
+            .answer-option {
+                padding: 0.5rem;
+                margin: 0.3rem 0;
+                border-radius: 6px;
+            }
+
+            .answer-option input[type="radio"] {
+                width: 16px;
+                height: 16px;
+                margin-right: 0.4rem;
+            }
+
+            textarea {
+                min-height: 80px;
+                padding: 0.6rem;
+                font-size: 16px;
+                border-radius: 8px;
+            }
+
+            select {
+                padding: 0.5rem;
+                border-radius: 8px;
+                font-size: 16px;
+            }
+
+            input[type="file"] {
+                padding: 0.4rem;
+                font-size: 0.9rem;
+            }
+        }
+    </style>
+</head>
+<body>
+
+<div class="quiz-container">
+
+    <div class="quiz-tabs">
+        <button class="active" onclick="showQuiz(0)">Қысқаша тест</button>
+        <button onclick="showQuiz(1)">Жаттығу</button>
+        <button onclick="showQuiz(2)">Сәйкестендіру</button>
+    </div>
+
+    <!-- ҚЫСҚАША ТЕСТ -->
+    <div class="quiz-section active">
+        <h2>Қысқаша тест</h2>
+
+        <div class="question">
+            <p>1. Жасанды интеллекттің негізгі мақсаты қандай?</p>
+            <label class="answer-option">
+                <input type="radio" name="q1" value="a" data-correct="false"> 
+                Оқушының орнына оқу
+            </label>
+            <label class="answer-option">
+                <input type="radio" name="q1" value="b" data-correct="true"> 
+                Оқу процесін жеңілдету
+            </label>
+            <label class="answer-option">
+                <input type="radio" name="q1" value="c" data-correct="false"> 
+                Мұғалімді толық алмастыру
+            </label>
+            <label class="answer-option">
+                <input type="radio" name="q1" value="d" data-correct="false"> 
+                Тек ойын-сауық үшін қолдану
+            </label>
+        </div>
+
+        <div class="question">
+            <p>2. Жасанды интеллекттің бір қауіп-қатері қандай?</p>
+            <label class="answer-option">
+                <input type="radio" name="q2" value="a" data-correct="false"> 
+                Уақытты үнемдеу
+            </label>
+            <label class="answer-option">
+                <input type="radio" name="q2" value="b" data-correct="true"> 
+                Жеке деректердің қауіпсіздігіне қауіп төнуі
+            </label>
+            <label class="answer-option">
+                <input type="radio" name="q2" value="c" data-correct="false"> 
+                Оқу сапасының артуы
+            </label>
+            <label class="answer-option">
+                <input type="radio" name="q2" value="d" data-correct="false"> 
+                Білім деңгейінің көтерілуі
+            </label>
+        </div>
+
+        <div class="question">
+            <p>3. Жасанды интеллектті қалай қолдану керек?</p>
+            <label class="answer-option">
+                <input type="radio" name="q3" value="a" data-correct="false"> 
+                Бақылаусыз
+            </label>
+            <label class="answer-option">
+                <input type="radio" name="q3" value="b" data-correct="false"> 
+                Толық сеніп
+            </label>
+            <label class="answer-option">
+                <input type="radio" name="q3" value="c" data-correct="true"> 
+                Жауапты және қауіпсіз түрде
+            </label>
+            <label class="answer-option">
+                <input type="radio" name="q3" value="d" data-correct="false"> 
+                Мүлде қолданбау
+            </label>
+        </div>
+
+        <div class="question">
+            <p>4. Академиялық адалдық нені білдіреді?</p>
+            <label class="answer-option">
+                <input type="radio" name="q4" value="a" data-correct="false"> 
+                Тек интернеттен көшіру
+            </label>
+            <label class="answer-option">
+                <input type="radio" name="q4" value="b" data-correct="true"> 
+                Өз еңбегімен жұмыс істеу
+            </label>
+            <label class="answer-option">
+                <input type="radio" name="q4" value="c" data-correct="false"> 
+                ЖИ-ды толық пайдалану
+            </label>
+            <label class="answer-option">
+                <input type="radio" name="q4" value="d" data-correct="false"> 
+                Тек мұғалімнің жауабын жазу
+            </label>
+        </div>
+
+        <div class="question">
+            <p>5. Ахмет Байтұрсынұлының «Оқу — білім бұлағы, білім — өмір шырағы» сөзі нені білдіреді?</p>
+            <label class="answer-option">
+                <input type="radio" name="q5" value="a" data-correct="false"> 
+                Оқу қажет емес
+            </label>
+            <label class="answer-option">
+                <input type="radio" name="q5" value="b" data-correct="true"> 
+                Білім өмірде маңызды рөл атқарады
+            </label>
+            <label class="answer-option">
+                <input type="radio" name="q5" value="c" data-correct="false"> 
+                Тек мұғалім үйретеді
+            </label>
+            <label class="answer-option">
+                <input type="radio" name="q5" value="d" data-correct="false"> 
+                Оқу тек мектеп үшін
+            </label>
+        </div>
+
+        <button class="submit-btn" id="submitBtn" onclick="checkTest()">Тексеру</button>
+        <div class="result" id="testResult"></div>
+    </div>
+
+    <!-- ЖАТТЫҒУ -->
+    <div class="quiz-section">
+        <h2>Ой дамыту тапсырмасы</h2>
+        <p>
+            Егер оқушы барлық тапсырмасын жасанды интеллект арқылы орындаса,
+            оның білім деңгейі қалай өзгереді деп ойлайсың?
+        </p>
+        <p><b>Өз пікіріңді 3–4 сөйлеммен жаз:</b></p>
+
+        <textarea id="essayText" placeholder="Жауабыңды осы жерге жаз..."></textarea>
+        <button class="submit-btn" onclick="submitEssay()">Жіберу</button>
+    </div>
+
+    <!-- СӘЙКЕСТЕНДІРУ -->
+    <div class="quiz-section">
+        <h2>Сәйкестендіру тапсырмасы</h2>
+
+        <p><b>Тапсырма:</b></p>
+        <p>Төмендегі ұғымдарды олардың дұрыс сипаттамаларымен сәйкестендіріңіз.</p>
+
+        <img src="image.png" style="width: 100%;">
+    </div>
+
+</div>
+
+<script>
+    const sections = document.querySelectorAll('.quiz-section');
+    const buttons = document.querySelectorAll('.quiz-tabs button');
+    let isQuizSubmitted = false;
+
+    function showQuiz(index) {
+        sections.forEach(s => s.classList.remove('active'));
+        buttons.forEach(b => b.classList.remove('active'));
+
+        sections[index].classList.add('active');
+        buttons[index].classList.add('active');
+        
+        // Reset submission state when switching tabs
+        if (index === 0) {
+            isQuizSubmitted = false;
+            const submitBtn = document.getElementById('submitBtn');
+            if (submitBtn) {
+                submitBtn.disabled = false;
+                submitBtn.textContent = 'Тексеру';
+            }
+        }
+    }
+
+    function checkTest() {
+        const questions = ['q1', 'q2', 'q3', 'q4', 'q5'];
+        let score = 0;
+        let answered = 0;
+        
+        // Check if all questions are answered
+        questions.forEach(q => {
+            const selected = document.querySelector(`input[name="${q}"]:checked`);
+            if (selected) answered++;
+        });
+
+        if (answered !== questions.length) {
+            alert('Барлық сұрақтарға жауап беріңіз!');
+            return;
+        }
+
+        // Score calculation and highlighting
+        questions.forEach(q => {
+            const selected = document.querySelector(`input[name="${q}"]:checked`);
+            const allOptions = document.querySelectorAll(`input[name="${q}"]`);
+            
+            allOptions.forEach(option => {
+                const optionLabel = option.parentElement;
+                const isCorrect = option.getAttribute('data-correct') === 'true';
+                
+                // Reset classes
+                optionLabel.classList.remove('correct', 'incorrect');
+                
+                if (isCorrect) {
+                    // Highlight correct answer in green
+                    optionLabel.classList.add('correct');
+                    if (selected === option) {
+                        score++;
+                    }
+                } else if (selected === option) {
+                    // Highlight user's incorrect selection in red
+                    optionLabel.classList.add('incorrect');
+                }
+                
+                // Disable radio buttons
+                option.disabled = true;
+            });
+        });
+
+        // Display result
+        const resultDiv = document.getElementById('testResult');
+        const percentage = Math.round((score / questions.length) * 100);
+        
+        resultDiv.classList.add('completed');
+        resultDiv.innerHTML = `
+            <div style="font-size: 2rem; margin-bottom: 0.5rem;">
+                ${score}/${questions.length}
+            </div>
+            <div style="font-size: 1rem;">
+                ${percentage}% - Дұрыс жауаптар
+            </div>
+        `;
+
+        // Change button state
+        const submitBtn = document.getElementById('submitBtn');
+        submitBtn.disabled = true;
+        submitBtn.textContent = 'Аяқталды';
+        isQuizSubmitted = true;
+    }
+
+    function submitEssay() {
+        const essayText = document.getElementById('essayText').value.trim();
+        
+        if (!essayText) {
+            alert('Жауап беріңіз!');
+            return;
+        }
+        
+        alert('Жауап жіберілді');
+    }
+</script>
+
+</body>
+</html>

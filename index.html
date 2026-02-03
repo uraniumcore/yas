@@ -1,0 +1,953 @@
+<!DOCTYPE html>
+<html lang="kk">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Білім берудегі жасанды интеллект</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link
+        href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@300;400;600;700&family=Montserrat:wght@300;400;500;600&display=swap"
+        rel="stylesheet">
+    <style>
+        :root {
+            --beige-light: #FFF9F0;
+            --beige-main: #F5EFE7;
+            --terracotta: #D4A574;
+            --terracotta-dark: #B8885F;
+            --brown-dark: #3E3632;
+            --brown-medium: #6B5D57;
+            --accent-gold: #C9A96E;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        html {
+            scroll-snap-type: y mandatory;
+            overflow-y: scroll;
+            height: 100vh;
+        }
+
+        body {
+            font-family: 'Montserrat', sans-serif;
+            background: var(--beige-light);
+            color: var(--brown-dark);
+            line-height: 1.7;
+            overflow-x: hidden;
+            height: 100%;
+            margin: 0;
+            padding: 0;
+        }
+
+        /* Navigation */
+        nav {
+            position: fixed;
+            top: 0;
+            width: 100%;
+            background: rgba(255, 249, 240, 0.95);
+            backdrop-filter: blur(10px);
+            z-index: 1000;
+            padding: 1.2rem 3rem;
+            box-shadow: 0 2px 20px rgba(62, 54, 50, 0.08);
+            transition: all 0.3s ease;
+        }
+
+        nav.scrolled {
+            padding: 0.8rem 3rem;
+            box-shadow: 0 2px 30px rgba(62, 54, 50, 0.12);
+        }
+
+        .nav-container {
+            max-width: 1400px;
+            margin: 0 auto;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .logo {
+            font-family: 'Cormorant Garamond', serif;
+            font-size: 1.8rem;
+            font-weight: 700;
+            color: var(--brown-dark);
+            text-decoration: none;
+            letter-spacing: 0.5px;
+        }
+
+        .nav-links {
+            display: flex;
+            gap: 2.5rem;
+            list-style: none;
+        }
+
+        .nav-links a {
+            color: var(--brown-medium);
+            text-decoration: none;
+            font-weight: 500;
+            font-size: 0.95rem;
+            position: relative;
+            transition: color 0.3s ease;
+        }
+
+        .nav-links a::after {
+            content: '';
+            position: absolute;
+            bottom: -5px;
+            left: 0;
+            width: 0;
+            height: 2px;
+            background: var(--terracotta);
+            transition: width 0.3s ease;
+        }
+
+        .nav-links a:hover {
+            color: var(--terracotta);
+        }
+
+        .nav-links a:hover::after {
+            width: 100%;
+        }
+
+        /* Hero Section */
+        .hero {
+            min-height: 100vh;
+            height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: linear-gradient(135deg, var(--beige-light) 0%, var(--beige-main) 100%);
+            padding: 8rem 3rem 4rem;
+            position: relative;
+            overflow: hidden;
+            scroll-snap-align: start;
+        }
+
+        .hero::before {
+            content: '';
+            position: absolute;
+            top: -50%;
+            right: -10%;
+            width: 60%;
+            height: 120%;
+            background: radial-gradient(circle, rgba(212, 165, 116, 0.08) 0%, transparent 70%);
+            animation: float 20s ease-in-out infinite;
+        }
+
+        @keyframes float {
+
+            0%,
+            100% {
+                transform: translate(0, 0) rotate(0deg);
+            }
+
+            33% {
+                transform: translate(30px, -30px) rotate(5deg);
+            }
+
+            66% {
+                transform: translate(-20px, 20px) rotate(-5deg);
+            }
+        }
+
+        .hero-content {
+            max-width: 1000px;
+            text-align: center;
+            position: relative;
+            z-index: 1;
+            animation: fadeInUp 1s ease-out;
+        }
+
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(30px);
+            }
+
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .hero h1 {
+            font-family: 'Cormorant Garamond', serif;
+            font-size: 4.5rem;
+            font-weight: 700;
+            color: var(--brown-dark);
+            margin-bottom: 2rem;
+            line-height: 1.2;
+            letter-spacing: 1px;
+        }
+
+        .hero-description {
+            font-size: 1.15rem;
+            color: var(--brown-medium);
+            max-width: 800px;
+            margin: 0 auto 1.5rem;
+            line-height: 1.8;
+        }
+
+        .hero-purpose {
+            font-size: 1.05rem;
+            color: var(--terracotta-dark);
+            font-weight: 500;
+            max-width: 700px;
+            margin: 0 auto;
+        }
+
+        .scroll-indicator {
+            position: absolute;
+            bottom: 3rem;
+            left: 50%;
+            transform: translateX(-50%);
+            animation: bounce 2s infinite;
+            transition: opacity 0.5s ease;
+        }
+
+        .scroll-indicator.hidden {
+            opacity: 0;
+            pointer-events: none;
+        }
+
+        @keyframes bounce {
+
+            0%,
+            100% {
+                transform: translateX(-50%) translateY(0);
+            }
+
+            50% {
+                transform: translateX(-50%) translateY(10px);
+            }
+        }
+
+        .scroll-indicator::before {
+            content: '↓';
+            font-size: 2rem;
+            color: var(--terracotta);
+        }
+
+        /* Section Base */
+        section {
+            min-height: 100vh;
+            height: auto;
+            /* 🔥 ВАЖНО */
+            padding: 6rem 3rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            scroll-snap-align: start;
+        }
+
+        section.visible {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+
+        .section-container {
+            width: 100%;
+            max-width: 1200px;
+        }
+
+        .section-number {
+            font-family: 'Cormorant Garamond', serif;
+            font-size: 1rem;
+            color: var(--terracotta);
+            font-weight: 600;
+            letter-spacing: 2px;
+            margin-bottom: 1rem;
+            text-transform: uppercase;
+        }
+
+        .section-title {
+            font-family: 'Cormorant Garamond', serif;
+            font-size: 3.5rem;
+            font-weight: 700;
+            color: var(--brown-dark);
+            margin-bottom: 2.5rem;
+            letter-spacing: 0.5px;
+        }
+
+        .section-content {
+            font-size: 1.1rem;
+            width: 100%;
+            color: var(--brown-medium);
+            line-height: 1.9;
+            max-width: 1200px;
+        }
+
+        /* Alternating Sections */
+        section:nth-child(even) {
+            background: var(--beige-main);
+        }
+
+        section:nth-child(odd) {
+            background: var(--beige-light);
+        }
+
+        /* Philosophers Section (Special) */
+        .philosophers-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 3rem;
+            margin-top: 3rem;
+        }
+
+        .philosopher-card {
+            background: white;
+            border-radius: 12px;
+            overflow: hidden;
+            box-shadow: 0 10px 40px rgba(62, 54, 50, 0.1);
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
+
+        .philosopher-card:hover {
+            transform: translateY(-10px);
+            box-shadow: 0 20px 60px rgba(62, 54, 50, 0.15);
+        }
+
+        .philosopher-image {
+            width: 100%;
+            height: 350px;
+            object-fit: cover;
+            background: var(--beige-main);
+        }
+
+        .philosopher-content {
+            padding: 2rem;
+        }
+
+        .philosopher-name {
+            font-family: 'Cormorant Garamond', serif;
+            font-size: 1.8rem;
+            font-weight: 700;
+            color: var(--brown-dark);
+            margin-bottom: 1rem;
+        }
+
+        .philosopher-description {
+            font-size: 1rem;
+            color: var(--brown-medium);
+            line-height: 1.7;
+        }
+
+        /* Quiz Section */
+        #quiz {
+            background: linear-gradient(135deg, var(--terracotta) 0%, var(--terracotta-dark) 100%);
+            color: white;
+        }
+
+        #quiz .section-number {
+            color: var(--beige-light);
+        }
+
+        #quiz .section-title {
+            color: white;
+        }
+
+        .quiz-container {
+            background: rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(10px);
+            border-radius: 20px;
+            padding: 3rem;
+            margin-top: 2rem;
+        }
+
+        .quiz-intro {
+            font-size: 1.2rem;
+            color: var(--beige-light);
+            text-align: center;
+            margin-bottom: 2rem;
+        }
+
+        .quiz-button {
+            display: inline-block;
+            background: white;
+            color: var(--terracotta-dark);
+            padding: 1rem 3rem;
+            border-radius: 50px;
+            text-decoration: none;
+            font-weight: 600;
+            font-size: 1.1rem;
+            transition: all 0.3s ease;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+        }
+
+        .quiz-button:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 15px 40px rgba(0, 0, 0, 0.3);
+            background: var(--beige-light);
+        }
+
+        /* Footer */
+        footer {
+            background: var(--brown-dark);
+            color: var(--beige-light);
+            padding: 3rem;
+            text-align: center;
+        }
+
+        footer p {
+            font-size: 0.95rem;
+            opacity: 0.8;
+        }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            .section-content {
+                padding-left: 0;
+            }
+
+            .section-content::before {
+                display: none;
+            }
+
+            .section-content p {
+                font-size: 1rem;
+                line-height: 1.75;
+                max-width: 100%;
+            }
+
+            .section-content p:first-child {
+                font-size: 1.05rem;
+            }
+
+            .section-content p:first-child::first-letter {
+                float: none;
+                font-size: 1.6rem;
+                margin-right: 0;
+            }
+        }
+
+        /* Scroll Navigation Arrows */
+        .scroll-nav {
+            position: fixed;
+            right: 2rem;
+            top: 50%;
+            transform: translateY(-50%);
+            z-index: 999;
+            display: flex;
+            flex-direction: column;
+            gap: 0.5rem;
+        }
+
+        .scroll-nav-dot {
+            width: 12px;
+            height: 12px;
+            border-radius: 50%;
+            background: var(--brown-medium);
+            opacity: 0.3;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            border: 2px solid transparent;
+        }
+
+        .scroll-nav-dot.active {
+            opacity: 1;
+            background: var(--terracotta);
+            transform: scale(1.3);
+        }
+
+        .scroll-nav-dot:hover {
+            opacity: 0.7;
+            transform: scale(1.2);
+        }
+
+        @media (max-width: 768px) {
+            .scroll-nav {
+                display: none;
+            }
+        }
+
+        /* Mobile Menu Toggle */
+        .menu-toggle {
+            display: none;
+            flex-direction: column;
+            cursor: pointer;
+            gap: 5px;
+        }
+
+        .menu-toggle span {
+            width: 25px;
+            height: 3px;
+            background: var(--brown-dark);
+            transition: all 0.3s ease;
+        }
+
+        @media (max-width: 768px) {
+            .menu-toggle {
+                display: flex;
+            }
+
+            .nav-links {
+                position: absolute;
+                top: 100%;
+                left: 0;
+                width: 100%;
+                background: var(--beige-light);
+                flex-direction: column;
+                padding: 2rem;
+                gap: 1.5rem;
+                transform: translateY(-100%);
+                opacity: 0;
+                pointer-events: none;
+                transition: all 0.3s ease;
+            }
+
+            .nav-links.active {
+                transform: translateY(0);
+                opacity: 1;
+                pointer-events: all;
+            }
+        }
+
+        nav.hidden {
+            transform: translateY(-100%);
+            opacity: 0;
+        }
+
+        section {
+            scroll-margin-top: 90px;
+        }
+
+        .section-content p {
+            font-size: 1.15rem;
+            line-height: 1.9;
+            margin-bottom: 1.8rem;
+        }
+
+        .section-content p:first-child {
+            font-size: 1.2rem;
+            color: var(--brown-dark);
+        }
+
+        .section-content p:first-child::first-letter {
+            font-family: 'Cormorant Garamond', serif;
+            font-size: 3.2rem;
+            font-weight: 700;
+            float: left;
+            line-height: 1;
+            margin-right: 0.6rem;
+            color: var(--terracotta);
+        }
+
+        .section-content {
+            position: relative;
+            padding-left: 1.5rem;
+        }
+
+        .section-content::before {
+            content: '';
+            position: absolute;
+            left: 0;
+            top: 0.5rem;
+            bottom: 0.5rem;
+            width: 3px;
+            background: linear-gradient(to bottom,
+                    transparent,
+                    var(--terracotta),
+                    transparent);
+            opacity: 0.3;
+        }
+
+        .section-content p {
+            opacity: 0;
+            transform: translateY(20px);
+            animation: textFade 0.8s ease forwards;
+        }
+
+        .section-content p:nth-child(1) {
+            animation-delay: 0.1s;
+        }
+
+        .section-content p:nth-child(2) {
+            animation-delay: 0.25s;
+        }
+
+        .section-content p:nth-child(3) {
+            animation-delay: 0.4s;
+        }
+
+        @keyframes textFade {
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .philosopher-card {
+            display: flex;
+            flex-direction: column;
+            height: 100%;
+        }
+
+        .philosopher-content {
+            display: grid;
+            grid-template-rows:
+                minmax(3.5rem, auto)
+                /* NAME */
+                minmax(4rem, auto)
+                /* QUOTE */
+                1fr;
+            /* DESCRIPTION */
+            padding: 2rem;
+            gap: 1rem;
+            height: 100%;
+        }
+
+        .philosopher-name {
+            font-family: 'Cormorant Garamond', serif;
+            font-size: 1.7rem;
+            font-weight: 700;
+            margin: 0;
+        }
+
+        .philosopher-quote {
+            font-style: italic;
+            font-size: 1rem;
+            line-height: 1.6;
+            color: var(--terracotta-dark);
+            margin: 0;
+        }
+
+        .philosopher-description {
+            font-size: 0.95rem;
+            line-height: 1.7;
+            color: var(--brown-medium);
+            margin: 0;
+        }
+
+        .philosophers-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 3rem;
+            align-items: stretch;
+            /* 🔥 ОБЯЗАТЕЛЬНО */
+        }
+
+        .philosopher-quote {
+            display: -webkit-box;
+            -webkit-line-clamp: 3;
+            -webkit-box-orient: vertical;
+            overflow: hidden;
+        }
+    </style>
+</head>
+
+<body>
+    <!-- Navigation -->
+    <nav id="navbar">
+        <div class="nav-container">
+            <a href="#" class="logo">AI & Білім</a>
+            <div class="menu-toggle" onclick="toggleMenu()">
+                <span></span>
+                <span></span>
+                <span></span>
+            </div>
+            <ul class="nav-links" id="navLinks">
+                <li><a href="#home">Басты бет</a></li>
+                <li><a href="#mukindiкter">Мүмкіндіктер</a></li>
+                <li><a href="#kauipter">Қауіп-қатерлер</a></li>
+                <li><a href="#kauipsiz">Қауіпсіз қолдану</a></li>
+                <li><a href="#adalдiq">Академиялық адалдық</a></li>
+                <li><a href="#bilim">Білімнің маңызы</a></li>
+                <li><a href="#quiz">Тест</a></li>
+            </ul>
+        </div>
+    </nav>
+
+    <!-- Scroll Navigation Dots -->
+    <div class="scroll-nav">
+        <div class="scroll-nav-dot active" data-section="home" onclick="scrollToSection('home')"></div>
+        <div class="scroll-nav-dot" data-section="mukindiкter" onclick="scrollToSection('mukindiкter')"></div>
+        <div class="scroll-nav-dot" data-section="kauipter" onclick="scrollToSection('kauipter')"></div>
+        <div class="scroll-nav-dot" data-section="kauipsiz" onclick="scrollToSection('kauipsiz')"></div>
+        <div class="scroll-nav-dot" data-section="adalдiq" onclick="scrollToSection('adalдiq')"></div>
+        <div class="scroll-nav-dot" data-section="bilim" onclick="scrollToSection('bilim')"></div>
+        <div class="scroll-nav-dot" data-section="quiz" onclick="scrollToSection('quiz')"></div>
+    </div>
+
+    <!-- Hero Section -->
+    <section id="home" class="hero">
+        <div class="hero-content">
+            <h1>Білім берудегі жасанды интеллект</h1>
+            <p class="hero-description">
+                Бұл сайт білім беру саласында жасанды интеллектті қолдану туралы ақпарат береді.
+                Сайтта оның мүмкіндіктері, қауіп-қатерлері, қауіпсіз қолдану жолдары, академиялық
+                адалдық мәселелері және білімнің маңызы туралы бөлімдер қамтылған.
+            </p>
+            <p class="hero-purpose">
+                Сайттың мақсаты – оқушылар мен студенттерге жасанды интеллектті дұрыс әрі жауапты
+                қолдануды түсіндіру.
+            </p>
+        </div>
+        <div class="scroll-indicator" id="scrollIndicator"></div>
+    </section>
+
+    <!-- Section 1: Мүмкіндіктер -->
+    <section id="mukindiкter">
+        <div class="section-container">
+            <div class="section-number">01 / Бөлім</div>
+            <h2 class="section-title">Мүмкіндіктер</h2>
+            <div class="section-content">
+                <p>Жасанды интеллект оқу процесін жеңілдетуге және білім сапасын арттыруға көмектеседі. Ол оқушылардың
+                    жеке қабілеттері мен білім деңгейіне сәйкес тапсырмалар ұсынып, әрқайсысына ыңғайлы оқу жолын
+                    қалыптастыра алады. Бұл оқушылардың материалды жақсы түсінуіне және өз мүмкіндіктерін толық ашуына
+                    жағдай жасайды.</p>
+                <p>Сонымен қатар, жасанды интеллект мұғалімнің жұмысын да жеңілдетеді. Ол оқу материалдарын жүйелеуге,
+                    тапсырмаларды тез тексеруге және оқушылардың үлгерімін бақылауға көмектеседі. Осы арқылы мұғалімдер
+                    оқушылармен тікелей жұмыс істеуге көбірек уақыт бөле алады.</p>
+                <p>Тағы бір маңызды артықшылығы – жасанды интеллект уақытты үнемдеуге мүмкіндік береді. Ол қажетті
+                    ақпаратты жылдам тауып, оқу материалдарын тиімді пайдалануға жағдай жасайды. Нәтижесінде оқу үдерісі
+                    ыңғайлырақ болып, білім алу анағұрлым нәтижелі болады.</p>
+            </div>
+        </div>
+    </section>
+
+    <!-- Section 2: Қауіп-қатерлер -->
+    <section id="kauipter">
+        <div class="section-container">
+            <div class="section-number">02 / Бөлім</div>
+            <h2 class="section-title">Қауіп-қатерлер</h2>
+            <div class="section-content">
+                <p>Жасанды интеллектті шамадан тыс қолдану оқушылардың өздігінен ойлау қабілетіне кері әсер етуі мүмкін.
+                    Егер оқушы барлық тапсырманы тек дайын жауап арқылы орындауға үйренсе, оның логикалық ойлауы мен
+                    мәселені өз бетімен шешу дағдысы әлсірейді. Бұл болашақта білімді терең меңгеруге кедергі келтіруі
+                    мүмкін.</p>
+                <p>Сонымен бірге, жасанды интеллектті дұрыс пайдаланбау плагиаттың көбеюіне әкелуі ықтимал. Оқушылар
+                    дайын мәтіндерді көшіріп қолдануға дағдыланса, өз ойын еркін жеткізу қабілеті төмендейді. Бұдан
+                    бөлек, жеке деректердің қауіпсіздігіне де қауіп төнуі мүмкін, себебі кейбір платформаларда
+                    ақпараттың қорғалуы жеткіліксіз болуы ықтимал.</p>
+                <p>Сондықтан жасанды интеллектті оқу үдерісінде тек көмекші құрал ретінде қолданып, оны бақылаумен және
+                    жауапкершілікпен пайдалану қажет. Бұл технология адам ойлауын алмастырмай, керісінше, оны дамытуға
+                    қызмет етуі тиіс.</p>
+            </div>
+        </div>
+    </section>
+
+    <!-- Section 3: Қауіпсіз қолдану -->
+    <section id="kauipsiz">
+        <div class="section-container">
+            <div class="section-number">03 / Бөлім</div>
+            <h2 class="section-title">Қауіпсіз қолдану</h2>
+            <div class="section-content">
+                <p>Жасанды интеллектті қолдану кезінде мына ережелерді сақтау маңызды:</p>
+                <ul>
+                    <li>оны көмекші құрал ретінде пайдалану</li>
+                    <li>алынған ақпаратты тексеру</li>
+                    <li>жеке деректерді енгізбеу</li>
+                    <li>тапсырмаларды өз бетінше орындау</li>
+                </ul>
+            </div>
+        </div>
+    </section>
+
+    <!-- Section 4: Академиялық адалдық -->
+    <section id="adalдiq">
+        <div class="section-container">
+            <div class="section-number">04 / Бөлім</div>
+            <h2 class="section-title">Академиялық адалдық</h2>
+            <div class="section-content">
+                <p>Академиялық адалдық – білім алу үдерісіндегі ең маңызды қағидалардың бірі. Ол оқушының немесе
+                    студенттің өз еңбегімен жұмыс істеп, алған білімін шынайы түрде көрсетуін білдіреді. Сондықтан
+                    жасанды интеллект арқылы алынған дайын мәтіндерді сол күйінде көшіріп қолдануға болмайды.</p>
+                <p>Әрбір оқушы немесе студент өз ойын өзі жазып, ақпаратты түсініп, өңдеп пайдалануы керек. Бұл оның
+                    ойлау қабілетін дамытып, тақырыпты тереңірек меңгеруіне көмектеседі. Сонымен қатар, өз еңбегімен
+                    жазылған жұмыс адамның жауапкершілігін арттырып, білімінің сапасын жақсартады.</p>
+                <p>Осылайша академиялық адалдықты сақтау арқылы адам тек тапсырманы орындап қана қоймай, өз білімін
+                    шынымен толықтырып, болашақта қажет болатын дағдыларды қалыптастырады.</p>
+            </div>
+        </div>
+    </section>
+
+    <!-- Section 5: Білімнің маңызы (with Philosophers) -->
+    <section id="bilim">
+        <div class="section-container">
+            <div class="section-number">05 / Бөлім</div>
+            <h2 class="section-title">Білім мен ақыл туралы ойлар</h2>
+            <!-- Philosophers Grid -->
+            <div class="philosophers-grid">
+                <div class="philosopher-card">
+                    <img src="1.png" alt="Ахмет Байтұрсынұлы" class="philosopher-image">
+                    <div class="philosopher-content">
+                        <h3 class="philosopher-name">Ахмет Байтұрсынұлы</h3>
+                        <p class="philosopher-quote"><b>«Оқу - білім бұлағы, білім - өмір шырағы.»</b></p>
+                        <p class="philosopher-description">
+                            Бұл сөз оқудың адам өміріндегі маңызын көрсетеді. ЖИ оқу барысында көмекші бола алады,
+                            алайда өз бетімен оқу мен үйренуді ұмытпау керек, себебі нағыз білім еңбек арқылы
+                            қалыптасады.
+                        </p>
+                    </div>
+                </div>
+
+                <div class="philosopher-card">
+                    <img src="2.png" alt="Философ 2" class="philosopher-image">
+                    <div class="philosopher-content">
+                        <h3 class="philosopher-name">Жамбыл Жабаев</h3>
+                        <p class="philosopher-quote"><b>«Білімдіден шыққан сөз, талаптыға болсын кез.»</b></p>
+                        <p class="philosopher-description">
+                            Бұл сөз білімді адамның сөзі өзгелерге үлгі болатынын көрсетеді. ЖИ арқылы ақпарат алуға
+                            болады, бірақ адам өзі ізденіп, оқыса, білімі тереңдей түседі.
+                        </p>
+                    </div>
+                </div>
+
+                <div class="philosopher-card">
+                    <img src="3.png" alt="Философ 3" class="philosopher-image">
+                    <div class="philosopher-content">
+                        <h3 class="philosopher-name">Шәкәрім Құдайбердіұлы</h3>
+                        <p class="philosopher-quote"><b>«Ақылсыз өмір — қараңғы түн.»</b></p>
+                        <p class="philosopher-description">
+                            Бұл сөз адамның өз ақылын пайдаланып, ойланып өмір сүруінің маңызын білдіреді. Қазіргі кезде
+                            ЖИ көмектесе алады, бірақ адам өзі де үйреніп, өз ойын дамытуы керек. Сонда ғана оның жолы
+                            айқынырақ болады.
+                        </p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Quiz Section -->
+    <section id="quiz">
+        <div class="section-container">
+            <div class="section-number">Тестілеу</div>
+            <h2 class="section-title">Білімді тексеру</h2>
+            <div class="quiz-container">
+                <p class="quiz-intro">
+                    Жасанды интеллект туралы білімді тексеру үшін тестті тапсырыңыз
+                </p>
+                <div style="text-align: center; margin-top: 2rem;">
+                    <a href="quiz.html" class="quiz-button">Тестті бастау</a>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer>
+        <p>&copy; 2026 Yasmin Aipanova. Барлық құқықтар қорғалған.</p>
+    </footer>
+
+    <script>
+        let hasScrolled = false;
+        const scrollIndicator = document.getElementById('scrollIndicator');
+
+        // Navbar scroll effect and hide indicator
+        window.addEventListener('scroll', function () {
+            const navbar = document.getElementById('navbar');
+            const scrollY = window.scrollY;
+
+            if (scrollY > 50) {
+                navbar.classList.add('scrolled');
+            } else {
+                navbar.classList.remove('scrolled');
+            }
+
+            // Hide scroll indicator after first scroll
+            if (scrollY > 100 && !hasScrolled) {
+                hasScrolled = true;
+                scrollIndicator.classList.add('hidden');
+            }
+        });
+
+        // Intersection Observer for sections
+        const sections = document.querySelectorAll('section');
+
+        const observerOptions = {
+            threshold: 0.5,
+            rootMargin: '0px'
+        };
+
+        const observer = new IntersectionObserver(function (entries) {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    entry.target.classList.add('visible');
+                }
+            });
+        }, observerOptions);
+
+        sections.forEach(section => {
+            observer.observe(section);
+        });
+
+        // Make hero visible immediately
+        document.querySelector('.hero').classList.add('visible');
+
+        // Mobile menu toggle
+        function toggleMenu() {
+            const navLinks = document.getElementById('navLinks');
+            navLinks.classList.toggle('active');
+        }
+
+        // Close mobile menu when link is clicked
+        document.querySelectorAll('.nav-links a').forEach(link => {
+            link.addEventListener('click', function (e) {
+                document.getElementById('navLinks').classList.remove('active');
+            });
+        });
+
+        // Scroll to section function
+        function scrollToSection(sectionId) {
+            const section = document.getElementById(sectionId);
+            if (section) {
+                section.scrollIntoView({ behavior: 'smooth', block: 'start' });
+            }
+        }
+
+        // Update active navigation dot based on which section is in viewport
+        function updateActiveNavDot() {
+            const dots = document.querySelectorAll('.scroll-nav-dot');
+
+            const navObserver = new IntersectionObserver(
+                (entries) => {
+                    entries.forEach(entry => {
+                        if (entry.isIntersecting) {
+                            const id = entry.target.id;
+
+                            dots.forEach(dot => {
+                                dot.classList.toggle(
+                                    'active',
+                                    dot.dataset.section === id
+                                );
+                            });
+                        }
+                    });
+                },
+                {
+                    threshold: 0.6 // секция считается активной когда 60% в экране
+                }
+            );
+
+            sections.forEach(section => navObserver.observe(section));
+        }
+
+        // Initial update
+        updateActiveNavDot();
+
+        const hero = document.getElementById('home');
+
+        const heroObserver = new IntersectionObserver(
+            ([entry]) => {
+                if (entry.isIntersecting) {
+                    navbar.classList.remove('hidden');
+                } else {
+                    navbar.classList.add('hidden');
+                }
+            },
+            {
+                threshold: 0.1
+            }
+        );
+
+        heroObserver.observe(hero);
+    </script>
+</body>
+
+</html>
